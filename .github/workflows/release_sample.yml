@@ -1,0 +1,76 @@
+name: Release Hosted Agents
+
+on:
+  push:
+    branches:
+      - hui/workflow-samples
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read version from manifest
+        id: version
+        run: |
+          VERSION=$(jq -r '.channels.stable.sampleVersion' samples/hosted-agent/version-manifest.json)
+          echo "tag=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create dotnet agent package
+        run: |
+          cd samples/hosted-agent
+          zip -r dotnet.zip dotnet/
+          ls -lh dotnet.zip
+
+      - name: Create python agent package
+        run: |
+          cd samples/hosted-agent
+          zip -r python.zip python/
+          ls -lh python.zip
+
+      - name: Upload packages as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hosted-agents-packages
+          path: |
+            samples/hosted-agent/dotnet.zip
+            samples/hosted-agent/python.zip
+          retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    # ------------------------------------------------------------
+    # This environment requires manual approval before proceeding.
+    # Go to: Settings → Environments → release-approval
+    # Add the specific GitHub users/teams as "Required reviewers".
+    # They will receive a notification with an approval link when
+    # this workflow runs.
+    # ------------------------------------------------------------
+    environment: release-approval
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: hosted-agents-packages
+          path: samples/hosted-agent/
+
+      - name: Upload packages to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.build.outputs.version }}
+          name: Hosted Agents ${{ needs.build.outputs.version }}
+          files: |
+            samples/hosted-agent/dotnet.zip
+            samples/hosted-agent/python.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
