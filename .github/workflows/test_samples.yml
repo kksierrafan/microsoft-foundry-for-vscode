@@ -1,4 +1,4 @@
-name: Validate Samples
+name: Test Samples
 
 on:
   schedule:
@@ -176,6 +176,7 @@ jobs:
              ${EMAIL_TRIGGERED_BY} ${EMAIL_ACTOR} ${EMAIL_RUN_NUMBER} ${EMAIL_RUN_ID}
              ${EMAIL_RUN_URL} ${EMAIL_REPOSITORY} ${EMAIL_SERVER_URL}' \
             < .github/email-templates/validate-samples-failure.html)
+          body=$(printf '%s' "$body" | tr -d '\n' | sed 's/>[[:space:]]\+</></g')
           echo "overall=$overall" >> "$GITHUB_OUTPUT"
           echo "passed=$passed"   >> "$GITHUB_OUTPUT"
           echo "total=$total"     >> "$GITHUB_OUTPUT"
@@ -221,7 +222,7 @@ jobs:
             --arg to      "$TO" \
             --arg subject "$SUBJECT" \
             --rawfile body "$body_file" \
-            '{to: $to, subject: $subject, body: $body}')
+            '{to: $to, subject: $subject, body: $body, bodyHtml: $body, contentType: "text/html"}')
           rm -f "$body_file"
 
           if [ -n "$auth_header" ]; then
