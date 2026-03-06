@@ -4,8 +4,6 @@ on:
   schedule:
     - cron: "0 1 * * *" # Daily at 9:00 AM Beijing time (UTC+8 → 01:00 UTC)
   push:
-    paths:
-      - "samples/hosted-agent/**"
     branches:
       - hui/validation-ci
   workflow_dispatch: # Allow manual trigger
