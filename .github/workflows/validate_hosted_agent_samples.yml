@@ -6,6 +6,8 @@ on:
   push:
     paths:
       - "samples/hosted-agent/**"
+    branches:
+      - hui/validation-ci
   workflow_dispatch: # Allow manual trigger
 
 jobs:
