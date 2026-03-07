@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.request import Request, urlopen
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(os.environ["REPO_ROOT"]) if "REPO_ROOT" in os.environ else Path(__file__).resolve().parents[2]
 PLACEHOLDER = "{{SafeProjectName}}"
 UPSTREAM_REPO_API = "https://api.github.com/repos/microsoft/agent-framework/contents"
 ALLOWED_SUFFIXES = {".cs", ".csproj"}
