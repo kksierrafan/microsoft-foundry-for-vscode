@@ -60,7 +60,7 @@ jobs:
 
       - name: Sync tracked sample files
         if: steps.prepare.outputs.branch_exists == 'true'
-        run: python .github/scripts/sync_agent_framework_dotnet_samples.py
+        run: python .github/scripts/sync_agent_framework_samples.py
 
       - name: Detect sample changes
         if: steps.prepare.outputs.branch_exists == 'true'
