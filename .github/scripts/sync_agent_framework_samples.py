@@ -37,20 +37,26 @@ SAMPLES = (
 )
 
 
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+
+
+def _auth_headers() -> dict[str, str]:
+    headers: dict[str, str] = {"User-Agent": "microsoft-foundry-for-vscode-sync"}
+    if GITHUB_TOKEN:
+        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+    return headers
+
+
 def fetch_json(url: str) -> list[dict[str, object]]:
-    request = Request(
-        url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "microsoft-foundry-for-vscode-sync",
-        },
-    )
+    headers = _auth_headers()
+    headers["Accept"] = "application/vnd.github+json"
+    request = Request(url, headers=headers)
     with urlopen(request) as response:
         return json.load(response)
 
 
 def fetch_text(url: str) -> str:
-    request = Request(url, headers={"User-Agent": "microsoft-foundry-for-vscode-sync"})
+    request = Request(url, headers=_auth_headers())
     with urlopen(request) as response:
         return response.read().decode("utf-8")
 

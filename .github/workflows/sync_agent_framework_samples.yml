@@ -34,6 +34,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.SYNC_APP_ID }}
+          private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
+
       - name: Stage sync script
         shell: bash
         run: |
@@ -68,6 +75,7 @@ jobs:
         if: steps.prepare.outputs.branch_exists == 'true'
         env:
           REPO_ROOT: ${{ github.workspace }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python "$RUNNER_TEMP/sync_agent_framework_samples.py"
 
       - name: Detect sample changes
@@ -119,7 +127,7 @@ jobs:
         id: labels
         shell: bash
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
 
@@ -157,6 +165,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ steps.app-token.outputs.token }}
           branch: ${{ steps.branch.outputs.name }}
           base: ${{ matrix.base_branch }}
           delete-branch: true
