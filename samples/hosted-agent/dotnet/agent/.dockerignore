@@ -8,6 +8,7 @@ out/
 .vscode/
 *.user
 *.suo
+*.sln
 *.sln.docstates
 .foundry/
 

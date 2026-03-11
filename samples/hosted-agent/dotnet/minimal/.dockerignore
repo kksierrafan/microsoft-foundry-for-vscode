@@ -7,6 +7,8 @@ obj/
 .vscode/
 *.user
 *.suo
+*.sln
+*.sln.docstates
 .foundry/
 
 # Source control

@@ -1,5 +1,5 @@
 # Build the application
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
 
 # Copy project files for dependency resolution
@@ -12,7 +12,7 @@ COPY . .
 RUN dotnet publish -c Release -o /app -p:AssemblyName=app
 
 # Run the application
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
 WORKDIR /app
 
 # Copy everything needed to run the app from the "build" stage.
