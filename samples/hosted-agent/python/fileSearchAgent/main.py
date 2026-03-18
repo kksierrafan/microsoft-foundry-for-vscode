@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-from agent_framework import HostedFileSearchTool, HostedVectorStoreContent, ai_function
+from agent_framework import HostedFileSearchTool, HostedVectorStoreContent
 from agent_framework.azure import AzureAIAgentClient
 from azure.ai.projects.aio import AIProjectClient
 from azure.ai.agentserver.agentframework import from_agent_framework
