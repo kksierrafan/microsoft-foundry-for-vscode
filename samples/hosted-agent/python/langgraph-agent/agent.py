@@ -28,7 +28,7 @@ credential = DefaultAzureCredential()
 token_provider = get_bearer_token_provider(credential, "https://ai.azure.com/.default")
 model = AzureChatOpenAI(
     model=deployment_name,
-    api_version="2024-12-01-preview",
+    api_version="2025-04-01-preview",
     azure_endpoint=openai_endpoint,
     azure_ad_token_provider=token_provider,
 )
