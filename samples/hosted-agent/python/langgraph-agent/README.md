@@ -185,12 +185,12 @@ This sample requires the Microsoft Foundry Project to authenticate using a Manag
 
 To configure the Managed Identity:
 
-1. In the Azure Portal, open the Foundry Project.
+1. In the Azure Portal, open the **Foundry resource** (name ends with `-resource`).
 2. Select "Access control (IAM)" from the left-hand menu.
 3. Click "Add" and choose "Add role assignment".
 4. In the role selection, search for and select "Azure AI User", then click "Next".
 5. For "Assign access to", choose "Managed identity".
-6. Click "Select members", locate the managed identity associated with your Foundry Project (you can search by the project name), then click "Select".
+6. Click "Select members", locate the managed identity associated with your **Foundry Project** (you can search by the project name, the one without `-resource` ending), then click "Select".
 7. Click "Review + assign" to complete the assignment.
 8. Allow a few minutes for the role assignment to propagate before running the application.
 

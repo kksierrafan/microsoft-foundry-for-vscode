@@ -19,17 +19,16 @@ from langchain_openai import AzureChatOpenAI
 
 load_dotenv()
 
-endpoint = os.environ["PROJECT_ENDPOINT"]
-os.environ["AZURE_AI_PROJECT_ENDPOINT"] = endpoint
-deployment_name = os.environ.get("MODEL_DEPLOYMENT_NAME", "gpt-4o")
-openai_endpoint = endpoint.split("/api/projects")[0]
+endpoint = os.environ["AZURE_AI_PROJECT_ENDPOINT"]
+deployment_name = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME", "gpt-4o")
+azure_endpoint = endpoint.split("/api/projects")[0]
 
 credential = DefaultAzureCredential()
 token_provider = get_bearer_token_provider(credential, "https://ai.azure.com/.default")
 model = AzureChatOpenAI(
     model=deployment_name,
     api_version="2025-04-01-preview",
-    azure_endpoint=openai_endpoint,
+    azure_endpoint=azure_endpoint,
     azure_ad_token_provider=token_provider,
 )
 
