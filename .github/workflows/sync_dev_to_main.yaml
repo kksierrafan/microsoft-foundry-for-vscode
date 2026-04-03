@@ -93,7 +93,7 @@ jobs:
           gh pr create \
             --base main \
             --head "${{ steps.sync.outputs.sync_branch }}" \
-            --title "chore: sync dev to main" \
+            --title "ci: sync dev to main" \
             --body "Automated sync from \`dev\` to \`main\`.
 
           This PR is created by an automated script. Please review carefully before merging."
