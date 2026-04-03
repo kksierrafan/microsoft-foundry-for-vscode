@@ -10,7 +10,7 @@ on:
 
 jobs:
   validate:
-    name: Validate ${{ matrix.branch }} — ${{ matrix.language }}/${{ matrix.type }}
+    name: "[${{ matrix.branch }}] ${{ matrix.language }}/${{ matrix.type }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false # Run all matrix jobs even if one fails
