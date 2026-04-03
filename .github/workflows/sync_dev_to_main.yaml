@@ -2,6 +2,8 @@ name: Sync Dev to Main
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"
   push:
     branches:
       - hui/sync-sample
@@ -62,10 +64,29 @@ jobs:
             git commit --amend --no-edit
           fi
 
+          # Check if there is any diff between the sync branch and main
+          if git diff --quiet origin/main; then
+            echo "No differences between dev and main (after exclusions). Skipping PR creation."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
           git push origin "$SYNC_BRANCH"
           echo "sync_branch=$SYNC_BRANCH" >> "$GITHUB_OUTPUT"
 
+      - name: Close previous sync PRs and clean up branches
+        if: steps.sync.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh pr list --base main --state open --json number,headRefName --jq '.[] | select(.headRefName | startswith("sync/dev-to-main")) | .number + " " + .headRefName' | while read -r pr_number branch_name; do
+            echo "Closing PR #$pr_number (branch: $branch_name)"
+            gh pr close "$pr_number" --comment "Superseded by a newer sync PR." --delete-branch
+          done
+
       - name: Create Pull Request
+        if: steps.sync.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
