@@ -8,6 +8,9 @@ on:
       - hui/validation-ci
   workflow_dispatch: # Allow manual trigger
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: "[${{ matrix.branch }}] ${{ matrix.language }}/${{ matrix.type }}"
